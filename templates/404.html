@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Strona nie została znaleziona{% endblock %}
+{% block content %}
+<div class="error wrapper margin-footer center">
+    <h2 class="error__title page-headline">UPS! Błąd 404</h2>
+    <p class="error__text">Strona nie została znaleziona.</p>
+    <a class="error__go-back-link" href="{% url 'index' %}" title="Przejdź do strony głównej">Wróć na stronę główną</a>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% load static %}
+<!-- Site Navigation -->
+<nav class="main-nav">
+    <div class="wrapper wrapper--main-nav">
+        <!-- Site Logo -->
+        <h1>
+            <a class="no-effect-link" href="{% if user.is_authenticated %}{% url 'events:mine' %}{% else %}{% url 'index' %}{% endif %}" title="Przejdź do strony głównej">
+                <img src="{% static 'img/logo.png' %}" alt="onoff logo">
+            </a>
+        </h1>
+        
+        <!-- Mobile Menu Button -->
+        <input type="checkbox" id="toggle-menu">
+        <label class="btn-menu" for="toggle-menu">
+            <i class="show-btn material-icons">menu</i>
+            <i class="close-btn material-icons">close</i>
+        </label>
+        <div class="menu-overlay"></div>
+        
+        <!-- Site Menu -->
+        <ul class="menu">
+            {% if user.is_authenticated %}
+            <li class="menu__element">
+                <a class="menu__link no-effect-link{% if 'mine' in request.resolver_match.view_name %} menu__link--active{% endif %}" href="{% url 'events:mine' %}" title="Przejdź do strony z Twoimi spotkaniami">Moje spotkania</a>
+            </li>
+            <li class="menu__element">
+                <a class="menu__link no-effect-link{% if 'events' in request.resolver_match.view_name and 'mine' not in request.resolver_match.view_name %} menu__link--active{% endif %}" href="{% url 'events:index' %}" title="Przejdź do strony głównej">Spotkania</a>
+            </li>
+            <li class="menu__element">
+                <a class="menu__link no-effect-link{% if request.resolver_match.view_name == 'about' %} menu__link--active{% endif %}" href="{% url 'about' %}" title="Dowiedz się więcej o stronie">O stronie</a>
+            </li>
+            {% else %}
+            <li class="menu__element menu__element--non-first-child">
+                <a class="menu__link no-effect-link{% if request.resolver_match.view_name == 'index' %} menu__link--active{% endif %}" href="{% url 'index' %}" title="Przejdź do strony głównej">Strona główna</a>
+            </li>
+            <li class="menu__element">
+                <a class="menu__link no-effect-link{% if 'events' in request.resolver_match.view_name %} menu__link--active{% endif %}" href="{% url 'events:index' %}" title="Przeglądaj spotkania">Spotkania</a>
+            </li>
+            <li class="menu__element">
+                <a class="menu__link no-effect-link{% if request.resolver_match.view_name == 'about' %} menu__link--active{% endif %}" href="{% url 'about' %}" title="Dowiedz się więcej o stronie">O stronie</a>
+            </li>
+            {% endif %}
+
+            <!-- Site Menu Account Part -->
+            <li class="menu__element menu__element--right">
+                <ul>
+                    {% if user.is_authenticated %}
+                    <li class="menu__element menu__element--messages">
+                        <a class="menu__link  no-effect-link{% if 'chat' in request.resolver_match.view_name %} menu__link--active{% endif %}" href="{% url 'chat:index' %}" title="Przejdź do wiadomości">
+                            <i class="material-icons material-icons--inline">mail_outline</i>Wiadomości
+                        </a>
+                    </li>
+                    <li class="menu__element menu__element--profile menu__element--border-right z-depth-1">
+                        <a class="menu__profile-link no-effect-link" href="{% url 'profile' user.get_username %}" title="Zobacz swój profil">
+                            <img class="circle photo-md"src="{{ user.profile.photo_or_default }}" alt="Zdjęcie - {{ profile.user.first_name }} {{ profile.user.last_name }}">
+                            <span class="menu__profile-link__user">{{ user.first_name }} {{ user.last_name }}</span>
+                        </a>
+                    </li>
+                    {% if user.is_superuser %}
+                    <li class="menu__element">
+                        <a class="menu__link no-effect-link" href="{% url 'admin:index' %}" title="Przejdź do panelu administratora">
+                            <i class="material-icons material-icons--inline">verified_user</i>Panel administratora
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="menu__element menu__element--bottom">
+                        <a class="menu__link no-effect-link" href="{% url 'logout' %}" title="Wyloguj się">
+                            <i class="material-icons material-icons--inline">exit_to_app</i>Wyloguj się
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="menu__element menu__element--non-first-child">
+                        <a class="menu__link menu__link--underline no-effect-link{% if request.resolver_match.view_name == 'login' %} menu__link--active-no-underline{% endif %}" href="{% url 'login' %}" title="Przejdź do strony logowania">Zaloguj się</a>
+                    </li>
+                    <li class="menu__btn valign-wrapper">
+                        <a class="btn btn--primary waves-effect waves-light" href="{% url 'register' %}" title="Przejdź do strony rejestracji">Zarejestruj się</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

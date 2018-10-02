@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Spotkania{% endblock %}
+{% block content %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li class="flash-message {% if message.tags %} flash-message--{{ message.tags }}{% endif %}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<div class="wrapper">
+    <div class="page-header">
+        <h2 class="page-headline">Spotkania</h2>
+        <a class="btn btn--v-margin btn--primary right-align" href="{% url 'events:create' %}" title="Dodaj nowe spotkanie">
+            <i class="material-icons">add</i>
+            Utwórz spotkanie
+        </a>
+    </div>
+
+    <ul class="section-wrapper events-types">
+        <li>
+            <a class="events-type__link no-effect-link center-align{% if request.resolver_match.view_name == 'events:index' %} events-type__link--active{% endif %}" href="{% url 'events:index' %}" title="Zobacz spotkania, które się odbędą">
+                Planowane spotkania
+            </a>
+        </li>
+        <li>
+            <a class="events-type__link no-effect-link center-align{% if request.resolver_match.view_name == 'events:past' %} events-type__link--active{% endif %}" href="{% url 'events:past' %}" title="Zobacz spotkania, które już się odbyły">
+                Archiwum spotkań
+            </a>
+        </li>
+    </ul>
+
+    <div class="section-wrapper">
+        {% block searchbar %}
+        <!-- Search Event Bar -->
+        <div class="card search-card">
+            <div class="card-content">
+                <h3 class="card-title center-align">Znajdź spotkanie</h3>
+                <form class="search-form" action="{% url 'events:index' %}" method="GET">
+                    <div class="flex-wrapper form--column">
+                        <!-- Text Input -->
+                        <div class="input-field input-field--search input-field--with-suffix">
+                            {{ form.query.label_tag }}
+                            {{ form.query }}
+                            <i class="material-icons prefix suffix">search</i>
+                        </div>
+                        <!-- Date Input -->
+                        <div class="input-field input-field--short input-field--with-suffix">
+                            {{ form.date.label_tag }}
+                            {{ form.date }}
+                            <i class="material-icons prefix suffix">event</i>
+                        </div>
+                        <!-- City Input -->
+                        <div class="input-field input-field--short input-field--short-last input-field--with-suffix">
+                            {{ form.city.label_tag }}
+                            {{ form.city }}
+                            <i class="material-icons prefix suffix">location_on</i>
+                        </div>
+                    </div>
+                    <!-- Sumbit Button -->
+                    <button class="btn btn--primary btn--search waves-effect waves-light" type="submit">Szukaj</button>
+                </form>
+            </div>
+        </div>
+        {% endblock %}
+        
+        <!-- Categories List -->
+        <ul class="center-align">
+            {% block categories_list %}
+            <li class="chip chip--category">
+            <a class="category__link no-effect-link category-sport-color{% if 'sport' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:index' %}?category=sport" title="Zobacz spotkania z kategorii sport">
+                <i class="category__icon category__icon--inline-name{% if 'sport' in request.get_full_path %} category__icon--active{% endif %} fas fa-futbol fa-lg"></i>Sport
+            </a>
+            </li>
+            <li class="chip chip--category">
+                <a class="category__link no-effect-link category-muzyka-color{% if 'muzyka' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:index' %}?category=muzyka" title="Zobacz spotkania z kategorii muzyka">
+                    <i class="category__icon category__icon--inline-name{% if 'muzyka' in request.get_full_path %} category__icon--active{% endif %} fas fa-music fa-lg"></i>Muzyka
+                </a>
+            </li>
+            <li class="chip chip--category">
+                <a class="category__link no-effect-link category-nauka-color{% if 'nauka' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:index' %}?category=nauka" title="Zobacz spotkania z kategorii nauka">
+                    <i class="category__icon category__icon--inline-name{% if 'nauka' in request.get_full_path %} category__icon--active{% endif %} fas fa-book fa-lg"></i>Nauka
+                </a>
+            </li>
+            <li class="chip chip--category">
+                <a class="category__link no-effect-link category-sztuka-color{% if 'sztuka' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:index' %}?category=sztuka" title="Zobacz spotkania z kategorii sztuka">
+                    <i class="category__icon category__icon--inline-name{% if 'sztuka' in request.get_full_path %} category__icon--active{% endif %} fas fa-paint-brush fa-lg"></i>Sztuka
+                </a>
+            </li>
+            <li class="chip chip--category">
+                <a class="category__link no-effect-link category-gry-color{% if 'gry' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:index' %}?category=gry" title="Zobacz spotkania z kategorii gry">
+                    <i class="category__icon category__icon--inline-name{% if 'gry' in request.get_full_path %} category__icon--active{% endif %} fas fa-gamepad fa-lg"></i>Gry
+                </a>
+            </li>
+            <li class="chip chip--category">
+                <a class="category__link no-effect-link category-pozostałe-color{% if 'pozosta' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:index' %}?category=pozostałe" title="Zobacz spotkania z kategorii pozostałe">
+                    <i class="category__icon category__icon--inline-name{% if 'pozosta' in request.get_full_path %} category__icon--active{% endif %} fas fa-question fa-lg"></i>Pozostałe
+                </a>
+            </li>
+            {% endblock %}
+        </ul>
+    </div>
+        
+    <section class="section-wrapper">
+        <h3 class="section-headline">
+        {% block section_headline %}
+        Nadchodzące spotkania
+        {% endblock %}
+        </h3>
+        {% if not events %}
+        <p>Brak spotkań</p>
+        {% else %}
+
+        <!-- Events Cards -->
+        <ul class="cards">
+            {% for event in events %}
+            <!-- Event Card -->
+            <li class="card-container" tabindex="0">
+                <!-- Front Card -->
+                <div class="card card--event front category-{{ event.category }}-border">
+                    <div class="card-content card-content--event">
+                        <!-- Title and Category -->
+                        <h4 class="card-title card-title--event-front category-{{ event.category }}-border">{{ event.title }}</h4>
+                        {% block event-user-status %}
+                        {% if user == event.organizer %}
+                        <span class="card__event__user-status">
+                            <i class="material-icons material-icons--inline material-icons--mid">verified_user</i>Jesteś organizatorem
+                        </span>
+                        {% elif user in event.participants.all %}
+                        <span class="card__event__user-status">
+                            <i class="material-icons material-icons--inline material-icons--mid">verified_user</i>Bierzesz udział
+                        </span>
+                        {% endif %}
+                        {% endblock %}
+                        <div class="card-content__event-category category-{{ event.category }}-background">
+                            <i class="fas {% if event.category == 'sport' %}fa-futbol{% elif event.category == 'muzyka' %}fa-music{% elif event.category == 'nauka' %}fa-book{% elif event.category == 'sztuka' %}fa-paint-brush{% elif event.category == 'gry' %}fa-gamepad{% elif event.category == 'pozostałe' %}fa-question{% endif %} fa-lg"></i>
+                        </div>
+                        
+                        <!-- Event's Basics -->
+                        <div class="card__event-basics">
+                            <i class="card__icon material-icons">access_time</i>
+                            <time class="card__event-basics__column card__event-basics__column--first" datetime="{{ event.date|date:'c' }}">
+                                <span>{{ event.date|date:"l" }},</span>
+                                <span>{{ event.date|date:"j E Y" }},</span>
+                                <span>godz. {{ event.date|date:"H:i" }}</span>
+                            </time>
+                            <i class="card__icon material-icons">location_on</i>
+                            <address class="card__event-basics__column not-exceed">
+                                <span>{{ event.city }}{% if event.city_area %}, </span><span>{{ event.city_area }}{% endif %}</span>
+                            </address>
+                        </div>
+
+                        <!-- Event Card Footer -->
+                        <div class="card-content__footer">
+                            <div>
+                                <i class="card__icon material-icons">people</i>
+                                <b>{{ event.participants.count }}</b>/{{ event.max_number_of_participants }}
+                                {% if event.min_number_of_participants %}
+                                <span class="right-align">(min. {{ event.min_number_of_participants }})</span>
+                                {% endif %}
+                            </div>
+                            <div class="progress progress--card">
+                                 <div class="determinate category-{{ event.category }}-background" style="width:{% widthratio event.participants.count event.max_number_of_participants 100 %}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Back Card -->
+                <div class="card category-{{ event.category }}-border back">
+                    <div class="card-content card-content--event">
+                        <div class="card-title card-title--back">{{ event.title }}</div>
+                        <a class="valign-wrapper card__event-organizer no-effect-link" href="{% url 'profile' event.organizer.username %}" title="Zobacz profil - {{ event.organizer.first_name }} {{ event.organizer.last_name }}">
+                            <img class="circle photo-md" src="{{ event.organizer.profile.photo_or_default }}" alt="Zdjęcie - {{ event.organizer.profile.user.first_name }} {{ event.organizer.profile.user.last_name }}">
+                            <span class="card__event-organizer-name">{{ event.organizer.first_name }} {{ event.organizer.last_name }}</span>
+                        </a>
+                        <p class="card__description__paragraph">{{ event.description|truncatechars:200 }}</p>
+                        <a class="card__more-btn category-{{ event.category }}-background category-{{ event.category }}-color-h no-effect-link" href="{% url 'events:detail' event.id %}" title="Przejdź do widoku spotkania">Zobacz więcej</a>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        
+        {% if events.has_previous or events.has_next  %}
+        <!-- Pagination -->
+        <div class="pagination">
+            <span class="step-links">
+                {% if events.has_previous %}
+                    <a class="btn btn--secondary btn--pagination" href="?page={{ events.previous_page_number }}" title="Przejdź do poprzedniej strony">
+                        <i class="material-icons">navigate_before</i>
+                    </a>
+                    {% if events.previous_page_number != 1 %}
+                    <span>&hellip;</span>
+                    {% endif %}
+                {% else %}
+                    <span class="btn btn--custom btn--pagination btn--pagination-disabled">
+                        <i class="material-icons">navigate_before</i>
+                    </span>
+                {% endif %}
+
+                <span class="current">
+                    {% if events.has_previous %}
+                    {% if not events.has_next and events.previous_page_number > 1 %}
+                    <a class="pagination__number no-effect-link" href="?page={{ events.previous_page_number|add:'-1' }}">{{ events.number|add:'-2' }}</a>
+                    {% endif %}
+                    <a class="pagination__number no-effect-link" href="?page={{ events.previous_page_number }}">{{ events.number|add:'-1' }}</a>
+                    {% endif %}
+
+                    <span class="pagination__number pagination__number--active">{{ events.number }}</span>
+
+                    {% if events.has_next %}
+                    <a class="pagination__number no-effect-link" href="?page={{ events.next_page_number }}">{{ events.number|add:'1' }}</a>
+                    {% if not events.has_previous and paginator.num_pages > 2 %}
+                    <a class="pagination__number no-effect-link" href="?page={{ events.next_page_number|add:'1' }}">{{ events.number|add:'2' }}</a>
+                    {% endif %}
+                    {% endif %}
+                </span>
+
+                {% if events.has_next %}
+                    {% if events.next_page_number < paginator.num_pages %}
+                    <span>&hellip;</span>
+                    {% endif %}
+                    <a class="btn btn--secondary btn--pagination" href="?page={{ events.next_page_number }}" title="Przejdź do następnej strony">
+                        <i class="material-icons">navigate_next</i>
+                    </a>
+                {% else %}
+                    <span class="btn btn--custom btn--pagination btn--pagination-disabled">
+                        <i class="material-icons">navigate_next</i>
+                    </span>
+                {% endif %}
+            </span>
+        </div>
+        {% endif %}
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function(){
+        $('.datepicker').datepicker({
+            firstDay: 1,
+            showDaysInNextAndPreviousMonths: true,
+            showClearBtn: true,
+            format: 'dd-mm-yyyy',
+            i18n: {
+                months: ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"],
+                monthsShort: ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"],
+                weekdays: ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"],
+                weekdaysShort: ["Niedz.", "Pon.", "Wt.", "Śr.", "Czw.", "Pt.", "Sob."],
+                weekdaysAbbrev: ["Nd", "Pn", "Wt", "Śr", "Cz", "Pt", "Sb"],
+                done: "Wybierz",
+                cancel: "Anuluj",
+                clear: "Resetuj"
+            }
+        })
+    });
+</script>
+{% endblock %}

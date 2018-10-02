@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block header %}
+{{ block.super }}
+<!-- Sito Introduction -->
+<div class="bg-image"></div>
+<section class="site-intro">
+    <h1 class="site-intro__headline">Z online do offline &ndash; serwis internetowy do&nbsp;organizacji spotkań towarzyskich</h1>
+    <p class="site-intro__text">Załóż darmowe konto, aby móc organizować własne spotkania oraz dołączać do&nbsp;już istniejących.</p>
+    <a class="btn--primary waves-effect waves-light btn-large" href="{% url 'register' %}" title="Przejdź do strony rejestracji">
+        <i class="material-icons">person_add</i>Dołącz
+    </a>
+</section>
+{% endblock %}
+
+{% block content %}
+<!-- Categories Navigation -->
+<div class="wrapper">
+    <!-- Events Categories Navigation -->
+    <h2 class="homepage-headline">Kategorie</h2>
+    <nav class="categories">
+        <ul class="categories__list">
+            <li class="category">
+                <a class="category__link category-sport-color-h no-effect-link" href="{% url 'events:index' %}?category=sport" title="Zobacz spotkania z kategorii sport">
+                    <i class="category__icon category-sport-color fas fa-futbol fa-2x"></i>
+                    <span class="category__name">Sport</span>
+                </a>
+            </li>
+            <li class="category">
+                <a class="category__link category-muzyka-color-h no-effect-link" href="{% url 'events:index' %}?category=muzyka" title="Zobacz spotkania z kategorii muzyka">
+                    <i class="category__icon category-muzyka-color fas fa-music fa-2x"></i>
+                    <span class="category__name">Muzyka</span>
+                </a>
+            </li>
+            <li class="category">
+                <a class="category__link category-nauka-color-h no-effect-link" href="{% url 'events:index' %}?category=nauka" title="Zobacz spotkania z kategorii nauka">
+                    <i class="category__icon category-nauka-color fas fa-book fa-2x"></i>
+                    <span class="category__name">Nauka</span>
+                </a>
+            </li>
+            <li class="category">
+                <a class="category__link category-sztuka-color-h no-effect-link" href="{% url 'events:index' %}?category=sztuka" title="Zobacz spotkania z kategorii sztuka">
+                    <i class="category__icon category-sztuka-color fas fa-paint-brush fa-2x"></i>
+                    <span class="category__name">Sztuka</span>
+                </a>
+            </li>
+            <li class="category">
+                <a class="category__link category-gry-color-h no-effect-link" href="{% url 'events:index' %}?category=gry" title="Zobacz spotkania z kategorii gry">
+                    <i class="category__icon category-gry-color fas fa-gamepad fa-2x"></i>
+                    <span class="category__name">Gry</span>
+                </a>
+            </li>
+            <li class="category">
+                <a class="category__link category-pozostałe-color-h no-effect-link" href="{% url 'events:index' %}?category=pozostałe" title="Zobacz spotkania z kategorii pozostałe">
+                    <i class="category__icon category-pozostałe-color fas fa-question fa-2x"></i>
+                    <span class="category__name">Pozostałe</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Events Section -->
+    <section class="section-wrapper">
+        <h2 class="homepage-headline">Nadchodzące spotkania</h2>
+        <!-- Events Cards -->
+        <ul class="cards">
+            {% for event in events %}
+            <!-- Event Card -->
+            <li class="card-container" tabindex="0">
+                <!-- Front Card -->
+                <div class="card card--event front category-{{ event.category }}-border">
+                    <div class="card-content card-content--event">
+                        <!-- Title and Category -->
+                        <h3 class="card-title card-title--event-front category-{{ event.category }}-border">{{ event.title }}</h3>
+                        {% block event-user-status %}
+                        {% if user == event.organizer %}
+                        <span class="card__event__user-status">
+                            <i class="material-icons material-icons--inline material-icons--mid">verified_user</i>Jesteś organizatorem
+                        </span>
+                        {% elif user in event.participants.all %}
+                        <span class="card__event__user-status">
+                            <i class="material-icons material-icons--inline material-icons--mid">verified_user</i>Bierzesz udział
+                        </span>
+                        {% endif %}
+                        {% endblock %}
+                        <div class="card-content__event-category category-{{ event.category }}-background">
+                            <i class="fas {% if event.category == 'sport' %}fa-futbol{% elif event.category == 'muzyka' %}fa-music{% elif event.category == 'nauka' %}fa-book{% elif event.category == 'sztuka' %}fa-paint-brush{% elif event.category == 'gry' %}fa-gamepad{% elif event.category == 'pozostałe' %}fa-question{% endif %} fa-lg"></i>
+                        </div>
+                        
+                        <!-- Event's Basics -->
+                        <div class="card__event-basics">
+                            <i class="card__icon material-icons">access_time</i>
+                            <time class="card__event-basics__column card__event-basics__column--first" datetime="{{ event.date|date:'c' }}">
+                                <span>{{ event.date|date:"l" }},</span>
+                                <span>{{ event.date|date:"j E Y" }},</span>
+                                <span>godz. {{ event.date|date:"H:i" }}</span>
+                            </time>
+                            <i class="card__icon material-icons">location_on</i>
+                            <address class="card__event-basics__column not-exceed">
+                                <span>{{ event.city }}{% if event.city_area %}, </span><span>{{ event.city_area }}{% endif %}</span>
+                            </address>
+                        </div>
+
+                        <!-- Event Card Footer -->
+                        <div class="card-content__footer">
+                            <div>
+                                <i class="card__icon material-icons">people</i>
+                                <b>{{ event.participants.count }}</b>/{{ event.max_number_of_participants }}
+                                {% if event.min_number_of_participants %}
+                                <span class="right-align">(min. {{ event.min_number_of_participants }})</span>
+                                {% endif %}
+                            </div>
+                            <div class="progress progress--card">
+                                 <div class="determinate category-{{ event.category }}-background" style="width:{% widthratio event.participants.count event.max_number_of_participants 100 %}%">
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Back Card -->
+                <div class="card category-{{ event.category }}-border back">
+                    <div class="card-content card-content--event">
+                        <div class="card-title card-title--back">
+                            <b>{{ event.title }}</b>
+                        </div>
+                        <a class="valign-wrapper card__event-organizer no-effect-link" href="{% url 'profile' event.organizer.username %}" title="Zobacz profil - {{ event.organizer.first_name }} {{ event.organizer.last_name }}">
+                            <img class="circle photo-md" src="{{ event.organizer.profile.photo_or_default }}" alt="Zdjęcie - {{ event.organizer.profile.user.first_name }} {{ event.organizer.profile.user.last_name }}">
+                            <span class="card__event-organizer-name">{{ event.organizer.first_name }} {{ event.organizer.last_name }}</span>
+                        </a>
+                        <p class="card__description__paragraph">{{ event.description|truncatechars:200 }}</p>
+                        <a class="card__more-btn category-{{ event.category }}-background category-{{ event.category }}-color-h no-effect-link" href="{% url 'events:detail' event.id %}" title="Przejdź do widoku spotkania">Zobacz więcej</a>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        <!-- Browse Button -->
+        <a class="btn--browse btn--primary btn-large" href="{% url 'events:index' %}" title="Zobacz więcej spotkań">Zobacz więcej
+            <i class="material-icons material-icons--right">arrow_forward</i>
+        </a>
+    </section>
+</div>
+{% endblock %}

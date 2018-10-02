@@ -1,0 +1,84 @@
+{% extends "events/index.html" %}
+
+{% block title %}Archiwum spotkań{% endblock %}
+{% block categories_list %}
+<li class="chip chip--category">
+    <a class="category__link no-effect-link category-sport-color{% if 'sport' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:past' %}?category=sport" title="Zobacz spotkania z kategorii sport">
+        <i class="category__icon category__icon--inline-name{% if 'sport' in request.get_full_path %} category__icon--active{% endif %} fas fa-futbol fa-lg"></i>Sport
+    </a>
+</li>
+<li class="chip chip--category">
+    <a class="category__link no-effect-link category-muzyka-color{% if 'muzyka' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:past' %}?category=muzyka" title="Zobacz spotkania z kategorii muzyka">
+        <i class="category__icon category__icon--inline-name{% if 'muzyka' in request.get_full_path %} category__icon--active{% endif %} fas fa-music fa-lg"></i>Muzyka
+    </a>
+</li>
+<li class="chip chip--category">
+    <a class="category__link no-effect-link category-nauka-color{% if 'nauka' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:past' %}?category=nauka" title="Zobacz spotkania z kategorii nauka">
+        <i class="category__icon category__icon--inline-name{% if 'nauka' in request.get_full_path %} category__icon--active{% endif %} fas fa-book fa-lg"></i>Nauka
+    </a>
+</li>
+<li class="chip chip--category">
+    <a class="category__link no-effect-link category-sztuka-color{% if 'sztuka' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:past' %}?category=sztuka" title="Zobacz spotkania z kategorii sztuka">
+        <i class="category__icon category__icon--inline-name{% if 'sztuka' in request.get_full_path %} category__icon--active{% endif %} fas fa-paint-brush fa-lg"></i>Sztuka
+    </a>
+</li>
+<li class="chip chip--category">
+    <a class="category__link no-effect-link category-gry-color{% if 'gry' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:past' %}?category=gry" title="Zobacz spotkania z kategorii gry">
+        <i class="category__icon category__icon--inline-name{% if 'gry' in request.get_full_path %} category__icon--active{% endif %} fas fa-gamepad fa-lg"></i>Gry
+    </a>
+</li>
+<li class="chip chip--category">
+    <a class="category__link no-effect-link category-pozostałe-color{% if 'pozosta' not in request.get_full_path %}-h{% endif %}" href="{% url 'events:past' %}?category=pozostałe" title="Zobacz spotkania z kategorii pozsotałe">
+        <i class="category__icon category__icon--inline-name{% if 'pozosta' in request.get_full_path %} category__icon--active{% endif %} fas fa-question fa-lg"></i>Pozostałe
+    </a>
+</li>
+{% endblock %}
+
+{% block searchbar %}
+<!-- Search Event Bar -->
+<div class="card search-card">
+    <div class="card-content">
+        <h3 class="card-title center-align">Znajdź spotkanie</h3>
+        <form class="search-form" action="{% url 'events:past' %}" method="GET">
+            <div class="flex-wrapper form--column">
+                <!-- Text Input -->
+                <div class="input-field input-field--search input-field--with-suffix">
+                    {{ form.query.label_tag }}
+                    {{ form.query }}
+                    <i class="material-icons prefix suffix">search</i>
+                </div>
+                <!-- Date Input -->
+                <div class="input-field input-field--short input-field--with-suffix">
+                    {{ form.date.label_tag }}
+                    {{ form.date }}
+                    <i class="material-icons prefix suffix">event</i>
+                </div>
+                <!-- City Input -->
+                <div class="input-field input-field--short input-field--short-last input-field--with-suffix">
+                    {{ form.city.label_tag }}
+                    {{ form.city }}
+                    <i class="material-icons prefix suffix">location_on</i>
+                </div>
+            </div>
+            <!-- Sumbit Button -->
+            <button class="btn btn--primary btn--search waves-effect waves-light" type="submit">Szukaj</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block section_headline %}
+Spotkania, które już się odbyły
+{% endblock %}
+
+{% block event-user-status %}
+{% if user == event.organizer %}
+<span class="card__event__user-status">
+    <i class="material-icons material-icons--inline material-icons--mid">verified_user</i>Byłeś organizatorem
+</span>
+{% elif user in event.participants.all %}
+<span class="card__event__user-status">
+    <i class="material-icons material-icons--inline material-icons--mid">verified_user</i>Wziąłeś udział
+</span>
+{% endif %}
+{% endblock %}

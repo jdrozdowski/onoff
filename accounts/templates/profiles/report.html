@@ -1,0 +1,61 @@
+<!-- User Report Page -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="wrapper">
+    <h2 class="page-headline">Zgłoś użytkownika</h2>
+    <div class="card card--form margin-footer">
+        <div class="card-content card-content--form">
+            <form class="custom-form" action="{% url 'report' username %}" method="POST">
+                <i class="color-warning medium material-icons">announcement</i>
+                <h3 class="card-title card-title--top-icon">Dlaczego chcesz zgłosić użytkownika <b><a href="{% url 'profile' username %}" title="Zobacz profil - {{ username }}">{{ username }}</a></b>?</h3>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <ul>
+                    {% for error in form.non_field_errors %}
+                    <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <!-- Violation Radio Buttons -->
+                <div>
+                    {{ form.violation.label_tag }}
+                    {% for radio in form.violation %}
+                    <div class="left-align">
+                        <label>
+                            {{ radio.tag }}<span>{{ radio.choice_label }}</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                    {% if form.violation.errors %}
+                    <ul>
+                        {% for error in form.comment.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Comment Text Area -->
+                <div class="input-field">
+                    {{ form.comment.label_tag }}
+                    {{ form.comment }}
+                    {% if form.comment.errors %}
+                    <ul>
+                        {% for error in form.comment.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                
+                <!-- Submit Button -->
+                <button class="btn btn--primary btn--custom-form waves-effect waves-light" type="submit">Wyślij zgłoszenie</button>
+                <!-- Cancel Button -->
+                <a class="btn btn--custom btn--cancel" href="{% url 'profile' username %}" title="Zrezygnuj z akcji">Anuluj</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

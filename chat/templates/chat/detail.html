@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Wiadomości{% endblock %}
+{% block content %}
+<div class="wrapper">
+    <div class="page-header">
+        <h2 class="page-headline">Wiadomości</h2>
+        <a class="btn btn--v-margin btn--primary right-align" href="{% url 'chat:create' %}" title="Napisz nową wiadomość">
+            <i class="material-icons">add</i>Nowa wiadomość
+        </a>
+    </div>
+    <div class="flex-wrapper flex-wrapper--sb messages-box">
+        <!-- Chats List -->
+        <div class="card card--messages-list">
+            <ul class="collection collection--messages">
+                {% for conversation in chats %}
+                <li class="collection-item collection-item--chat {% if conversation.pk == chat.pk %} collection-item--chat--active{% endif %}">
+                    {% for participant in conversation.participants.all %}
+                        {% if participant != user %}
+                        <div class="message__identifier valign-wrapper">
+                            <img class="circle photo-md" src="{{ participant.profile.photo_or_default }}" alt="Zdjęcie - {{ participant.first_name }} {{ participant.last_name }}">
+                            <span>{{ participant.first_name }} {{ participant.last_name }}</span>
+                        </div>
+                        {% endif %}
+                    {% empty %}
+                        <div class="message__identifier not-exceed">{% if conversation.event %}{{ conversation.event.title }}{% else %}Spotkanie usunięte{% endif %}</div>
+                    {% endfor %}
+                    <time class="message__time" datetime="{{ conversation.last_activity|date:'c' }}">{{ conversation.last_activity }}</time>
+                    <a class="chat-link no-effect-link" href="{% url 'chat:detail' conversation.id %}" title="Zobacz konwersację"></a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <!-- Chat View -->
+        <article class="card card--message">
+            <div class="card-content card-content--message">
+                <h3 class="card-title card-title--message center-align">
+                    {% for participant in chat.participants.all %}
+                        {% if participant != user %}
+                        <a href="{% url 'profile' participant.username %}" title="Zobacz profil użytkownika">
+                            <b>{{ participant.first_name }} {{ participant.last_name }}</b>
+                        </a>
+                        {% endif %}
+                    {% empty %}
+                        {% if chat.event %}
+                        <a href="{% url 'events:detail' chat.event.pk %}" title="Przejdź do strony spotkania">
+                            <b>{{ chat.event.title }}</b>
+                        </a>
+                        {% else %}
+                            <b>Spotkanie usunięte</b>
+                        {% endif %}
+                    {% endfor %}
+                </h3>
+                <ul class="chat__messages">
+                    {% for message in chat.message_set.all %}
+                    <li class="messages__item clearfix">
+                        <div class="message__item__time{% if message.author == request.user %} right-align{% endif %}">
+                            <time datetime="{{ message.timestamp|date:'c' }}">{{ message.timestamp }}</time>
+                        </div>
+                        {% if not message.author == request.user %}
+                        <a class="no-effect-link" href="{% url 'profile' message.author %}" title="Zobacz profil - {{ message.author.first_name }} {{ message.author.last_name }}">
+                            <img class="circle photo-md"src="{{ message.author.profile.photo_or_default }}" alt="Zdjęcie - {{ message.author.first_name }} {{ message.author.last_name }}">
+                        </a>
+                        {% endif %}
+                        <p class="message{% if message.author == request.user %} message--user right{% endif %} not-exceed">{{ message.content }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <form class="card-action clearfix" action="{% url 'chat:detail' chat.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="input-field">
+                    {{ form.content.label_tag }}
+                    {{ form.content }}
+                    {% if form.content.errors %}
+                        {% for error in form.content.errors %}
+                        <span class="helper-text helper-text--wrong">{{ error|escape }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    </div>
+                    <input class="btn btn--primary" type="submit" value="Wyślij">
+                </form>
+            </div>
+        </article>
+    </div>
+</div>
+{% endblock %}

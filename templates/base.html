@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8">
+
+    <!-- Let browser know website is optimized for mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Import Poppins Font -->
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700&amp;subset=latin-ext" rel="stylesheet">
+    <!-- Import Font Awesome Icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
+    <!-- Import Google Icon Font -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Import normalize.css -->
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+    <!-- Import style.css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- ****** favicony faviconit.com ****** -->
+    <link rel="shortcut icon" href="{% static 'img/favicons/favicon.ico' %}">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="{% static 'img/favicons/favicon.ico' %}">
+    <link rel="icon" type="image/png" sizes="196x196" href="{% static 'img/favicons/favicon-192.png' %}">
+    <link rel="icon" type="image/png" sizes="160x160" href="{% static 'img/favicons/favicon-160.png' %}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{% static 'img/favicons/favicon-96.png' %}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{% static 'img/favicons/favicon-64.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicons/favicon-32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/favicons/favicon-16.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'favicons/favicon-57.png' %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'img/favicons/favicon-114.png' %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/favicons/favicon-72.png' %}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'img/favicons/favicon-144.png' %}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{% static 'img/favicons/favicon-60.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'img/favicons/favicon-120.png' %}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'img/favicons/favicon-76.png' %}">
+
+    <title>{% block title %}Z offline do online - serwis internetowy do organizaji spotkań towarzyskich{% endblock %} | onoff</title>
+</head>
+
+<body>
+    <!-- Main Header -->
+    <header class="main-header z-depth-2">
+        {% block header %}
+            {% include "includes/header.html" %}
+        {% endblock %}
+    </header>
+
+    <!-- Main Area -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Site Footer -->
+    <footer class="site-footer wrapper">
+        <p class="site-footer__text">Autorem niniejszego serwisu jest <a href="mailto:jdrozdowski@protonmail.com" title="Napisz wiadomość e-mail do autora serwisu">Jakub Drozdowski</a>.<br>Serwis ten stanowi integralną część pracy licencjackiej (kierunek: Elektroniczne Przetwarzanie Informacji), przygotowanej pod kierunkiem dra&nbsp;Piotra Jordana Śliwińskiego na&nbsp;Wydziale Zarządzania i&nbsp;Komunikacji Społecznej Uniwersytetu Jagiellońskiego.</p>
+        <div>
+            <a class="footer-link" href="{% url 'statute' %}" title="Zobacz regulamin serwisu">Regulamin serwisu</a>
+            <a class="footer-link" href="{% url 'bibliography' %}" title="Zobacz biblografię projektu">Bibliografia</a>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    {% block javascript %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li class="flash-message {% if message.tags %} flash-message--{{ message.tags }}{% endif %}">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<div class="wrapper user-profile">
+    <div class="page-header">
+        <h2 class="page-headline">{% if profile.user == request.user %} Mój profil {% else %}Profil użytkownika {% endif %}</h2>
+        {% if not profile.user == request.user %}
+        <a class="secondary-link" href="{% url 'report' profile.user.username %}" title="Zgłoś użytkownika">
+            <i class="material-icons material-icons--inline">report</i>Zgłoś
+        </a>
+        {% endif %}
+    </div>
+    <div class="card card--profile margin-footer">
+        <div class="card-content">
+            <header class="card-content profile-header">
+            <img class="profile-photo photo-lg circle profile-photo{% if profile.gender == 'M' %}--man{% else %}--woman{% endif %}" src="{{ profile.photo_or_default }}" alt="Zdjęcie - {{ profile.user.first_name }} {{ profile.user.last_name }}">
+            <div class="profile-header__item">
+                <div class="profile-names">
+                    <h3 class="profile-title not-exceed">{{ profile.user.first_name }} {{ profile.user.last_name }}</h3>
+                    <span>
+                        <i class="material-icons material-icons--inline">gesture</i>{{ profile.user }}
+                    </span> 
+                </div>
+                {% if profile.user != request.user %}
+                <a class="btn btn--secondary" href="{% url 'chat:create' %}?receiver={{ profile.user }}" title="Napisz wiadomość do {{ profile.user.first_name }} {{ profile.user.last_name }}">
+                    <i class="material-icons">local_post_office</i>Chatuj
+                </a>
+                {% endif %}
+            </div>
+            </header>
+            <ul class="profile-basics">
+                <li>
+                    <div><i class="material-icons material-icons--inline">location_on</i>Miasto:</div>
+                    <b>{{ profile.city }}</b>
+                </li>
+                <li>
+                    <div><i class="material-icons material-icons--inline">cake</i>Data urodzenia:</div>
+                    <b>{{ profile.birthdate }}</b>
+                </li>
+            </ul>
+        </div>
+    </div>
+   
+    <section class="card">
+        <div class="card-content card-content--profile-description">
+            <h4 class="card-title">O mnie</h4>
+            <p class="first-paragraph not-exceed">{{ profile.description }}</p>
+        </div>
+    </section>
+
+    {% if user.pk == profile.user.pk %}
+    <section class="card">
+        <div class="card-content">
+            <h4 class="card-title">Zarządzanie kontem</h4>
+            <div>Twój adres e-mail: <b>{{ profile.user.email }}</b></div>
+        </div>
+        <div class="card-action card-action--settings">
+            <a class="btn btn--v-margin btn--secondary" href="{% url 'profile_edit' %}" title="Przejdź do formularza edycji profilu">
+                <i class="material-icons">edit</i>Edytuj profil
+            </a>
+            <a class="btn btn--v-margin btn--secondary" href="{% url 'password_change' %}" title="Przejdź do formularza zmiany hasła">
+                <i class="material-icons">vpn_key</i>Zmień hasło
+            </a>
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

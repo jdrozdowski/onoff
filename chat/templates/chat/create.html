@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="wrapper">
+    <h2 class="page-headline">Wyślij wiadomość</h2>
+    <div class="card card--form">
+        <div class="card-content card-content--form">
+            <form class="custom-form" action="{% url 'chat:create' %}" method="POST">
+                <i class="medium material-icons">create</i>
+                <h3 class="card-title card-title--top-icon">Nowa wiadomość</h3>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <ul>
+                    {% for error in form.non_field_errors %}
+                    <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <!-- Username Input -->
+                <div class="input-field input-field--first">
+                    {{ form.receiver.label_tag }}
+                    {{ form.receiver }}
+                    <span class="helper-text left-align">{{ form.receiver.help_text }}</span>
+                    {% if form.receiver.errors %}
+                    <ul>
+                        {% for error in form.receiver.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Message Text Area -->
+                <div class="input-field">
+                    {{ form.content.label_tag }}
+                    {{ form.content }}
+                    {% if form.content.errors %}
+                    <ul>
+                        {% for error in form.content.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                
+                <!-- Submit Button -->
+                <button class="btn btn--primary btn--custom-form waves-effect waves-light" type="submit">Wyślij</button>
+                <!-- Cancel Button -->
+                <a class="btn btn--custom btn--cancel" href="{% if request.GET.receiver %}{% url 'profile' request.GET.receiver %}{% else %}{% url 'chat:index' %}{% endif %}" title="Zrezygnuj z akcji">Anuluj</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

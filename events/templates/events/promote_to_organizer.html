@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="wrapper">
+    <h2 class="page-headline">Przekaż rolę organizatora</h2>
+    <div class="card card--form">
+        <div class="card-content card-content--form">
+            <form class="custom-form" action="" method="POST">
+                <i class="medium material-icons">transfer_within_a_station</i>
+                <h3 class="card-title card-title--top-icon">Wybierz nowego organizatora</h3>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <ul>
+                    {% for error in form.non_field_errors %}
+                    <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+				
+				<div class="select-visible">
+					{{form}}
+                </div>
+				
+                <!-- Submit Button -->
+                <button class="btn btn--primary btn--custom-form waves-effect waves-light" type="submit">Zatwierdź</button>
+                <!-- Cancel Button -->
+                <a class="btn btn--custom btn--cancel" href="{% url 'events:index' %}" title="Zrezygnuj z akcji">Anuluj</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

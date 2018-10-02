@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="wrapper">
+    <div class="page-header">
+        <h2 class="page-headline">Wiadomości</h2>
+        <a class="btn btn--v-margin btn--primary right-align" href="{% url 'chat:create' %}" title="Napisz nową wiadomość">
+            <i class="material-icons">add</i>Nowa wiadomość
+        </a>
+    </div>
+    <p class="center">Nie masz żadnych wiadomości</p>
+</section>
+{% endblock %}

@@ -1,0 +1,68 @@
+<!-- Login Page -->
+{% extends "base.html" %}
+
+{% block content %}
+{% if next %}
+{% if user.is_authenticated %}
+<div class="flash-message flash-message--warning">Nie masz uprawnień, aby kontynuować. Zaloguj się na konto z wymaganymi uprawnieniami.</div>
+{% else %}
+<div class="flash-message flash-message--warning">Zaloguj się, aby kontynuować.</div>
+{% endif %}
+{% endif %}
+<div class="wrapper">
+    <div class="card card--form card--login-form margin-footer">
+        <div class="card-content card-content--form">
+            <!-- Login Form -->
+            <form class="authentication-form" action="{% url 'login' %}" method="POST">
+                <i class="medium material-icons">fingerprint</i>
+                <h2 class="card-title card-title--top-icon">Zaloguj się</h2>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <ul>
+                    {% for error in form.non_field_errors %}
+                    <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <!-- Username Input -->
+                <div class="input-field input-field--first input-field--with-suffix">
+                    <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                    {{ form.username }}
+                    <i class="material-icons prefix suffix">face</i>
+                    {% if form.username.errors %}
+                    <ul>
+                        {% for error in form.username.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Password Input -->
+                <div class="input-field input-field--with-suffix">
+                    <label for="{{ form.username.id_for_label }}">{{ form.password.label }}</label>
+                    {{ form.password }}
+                    <i class="material-icons prefix suffix">lock_outline</i>
+                    {% if form.password.errors %}
+                    <ul>
+                        {% for error in form.password.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button class="btn btn--primary btn--authentication waves-effect waves-light" type="submit">Zaloguj się</button>
+                    <input type="hidden" name="next" value="{{ next }}">
+                </div>
+            </form>
+            <div>
+                Nie masz konta? <a href="{% url 'register' %}" title="Przejdź do strony rejestracji">Zarejestruj się.</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

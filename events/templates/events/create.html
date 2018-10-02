@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="wrapper">
+    <h2 class="page-headline">Utwórz nowe spotkanie</h2>
+    <div class="card card--form margin-footer">
+        <div class="card-content card-content--form">
+            <form class="custom-form" action="{% url 'events:create' %}" method="POST">
+                <i class="medium material-icons">create</i>
+                <h3 class="card-title card-title--top-icon">Nowe spotkanie</h3>
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                <ul>
+                    {% for error in form.non_field_errors %}
+                    <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                <!-- Title Input -->
+                <div class="input-field input-field--first">
+                    {{ form.title.label_tag }}
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                    <ul>
+                        {% for error in form.title.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Category Radio Buttons -->
+                <div>
+                    {{ form.category.label_tag }}
+                    {% for radio in form.category %}
+                    <div class="left-align">
+                        <label>
+                            {{ radio.tag }}<span>{{ radio.choice_label }}</span>
+                        </label>
+                    </div>
+                    {% endfor %}
+                    {% if form.category.errors %}
+                    <ul>
+                        {% for error in form.category.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- City Input -->
+                <div class="input-field">
+                    {{ form.city.label_tag }}
+                    {{ form.city }}
+                    {% if form.city.errors %}
+                    <ul>
+                        {% for error in form.city.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- City Area Input -->
+                <div class="input-field">
+                    {{ form.city_area.label_tag }}
+                    {{ form.city_area }}
+                    <span class="helper-text left-align">{{ form.city_area.help_text }}</span>
+                    {% if form.city_area.errors %}
+                    <ul>
+                        {% for error in form.city_area.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- DateTime Input -->
+                <div class="input-field">
+                    <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
+                    {{ form.date }}
+                    {% if form.date.errors %}
+                    <ul>
+                        {% for error in form.date.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+
+                <!-- Minimum Number of Participants Input -->
+                <div class="input-field">
+                    {{ form.min_number_of_participants.label_tag }}
+                    {{ form.min_number_of_participants }}
+                    <span class="helper-text left-align">{{ form.min_number_of_participants.help_text }}</span>
+                    {% if form.min_number_of_participants.errors %}
+                    <ul>
+                        {% for error in form.min_number_of_participants.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Maximum Number of Participants Input -->
+                <div class="input-field">
+                    {{ form.max_number_of_participants.label_tag }}
+                    {{ form.max_number_of_participants }}
+                    <span class="helper-text left-align">{{ form.max_number_of_participants.help_text }}</span>
+                    {% if form.max_number_of_participants.errors %}
+                    <ul>
+                        {% for error in form.max_number_of_participants.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Description Text Area -->
+                <div class="input-field">
+                    {{ form.description.label_tag }}
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                    <ul>
+                        {% for error in form.description.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+
+                <!-- Tags Input -->
+                <div class="input-field">
+                    {{ form.tags.label_tag }}
+                    {{ form.tags }}
+                    <span class="helper-text left-align">{{ form.tags.help_text }}</span>
+                    {% if form.tags.errors %}
+                    <ul>
+                        {% for error in form.tags.errors %}
+                        <li class="helper-text helper-text--wrong left-align">{{ error|escape }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                
+                <!-- Submit Button -->
+                <button class="btn btn--primary btn--custom-form waves-effect waves-light" type="submit">Stwórz</button>
+                <!-- Cancel Button -->
+                <a class="btn btn--custom btn--cancel" href="{% url 'events:index' %}" title="Zrezygnuj z akcji">Anuluj</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function(){
+        $('.datepicker').datepicker({
+            firstDay: 1,
+            showDaysInNextAndPreviousMonths: true,
+            showClearBtn: true,
+            format: 'dd-mm-yyyy',
+            i18n: {
+                months: ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"],
+                monthsShort: ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"],
+                weekdays: ["Niedziela", "Poniedziałek", "Wtorek", "Środa", "Czwartek", "Piątek", "Sobota"],
+                weekdaysShort: ["Niedz.", "Pon.", "Wt.", "Śr.", "Czw.", "Pt.", "Sob."],
+                weekdaysAbbrev: ["Nd", "Pn", "Wt", "Śr", "Cz", "Pt", "Sb"],
+                cancel: "Anuluj",
+                clear: "Resetuj"
+            }
+        })
+    });
+
+    $(document).ready(function(){
+        $('.timepicker').timepicker({
+            twelveHour: false,
+            showClearBtn: true,
+            i18n: {
+                done: "Wybierz",
+                cancel: "Anuluj",
+                clear: "Resetuj"
+            }
+        })
+    });
+</script>
+{% endblock %}

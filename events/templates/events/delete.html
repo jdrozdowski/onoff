@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="wrapper">
+    <h2 class="page-headline">Usuwanie spotkania</h2>
+    <div class="card card--form">
+        <div class="card-content card-content--form">
+            <form class="custom-form" action="{% url 'events:delete' event.id %}" method="POST">
+                <i class="color-danger medium material-icons">delete</i>
+                <h3 class="card-title card-title--top-icon">Czy na pewno chcesz usunąć spotkanie <b class="not-exceed">&bdquo;{{ event.title }}&rdquo;</b>?</h3>
+                {% csrf_token %}
+                <div class="flex-wrapper flex-wrapper--sb">
+                    <!-- Cancel Button -->
+                    <a class="btn btn--inline waves-effect waves-light" href="{% url 'events:detail' event.pk %}" title="Zrezygnuj z akcji">Nie, anuluj</a>
+                    <!-- Delete Button -->
+                    <button class="btn btn--danger btn--inline waves-effect waves-light" type="submit">Tak, usuń</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
