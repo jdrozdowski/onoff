@@ -1,0 +1,2 @@
+# onoff
+An web application which enables users to organize social meetings in order to realize common passions of  their participants. The project’s aim is to make it possible for Internet users to make acquaintances online and then develop acquaintanceship in the real world by realizing specified activities together. Through the website it is possible both organising own group meetings and joining to already existing concepts, created by other users.
